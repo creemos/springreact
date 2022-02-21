@@ -3,7 +3,6 @@ package ru.springreact.springreact.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.springreact.springreact.model.Student;
 import ru.springreact.springreact.repo.StudentRepository;
@@ -11,6 +10,7 @@ import ru.springreact.springreact.repo.StudentRepository;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/students")
 public class StudentController {
 
@@ -32,8 +32,8 @@ public class StudentController {
         }
     }
 
-    @PostMapping
-    public Student saveStudent(@Validated @RequestBody Student student) {
+    @PostMapping(consumes = {"application/xml","application/json"})
+    public Student saveStudent(@RequestBody Student student) {
         return studentRepository.save(student);
     }
 }

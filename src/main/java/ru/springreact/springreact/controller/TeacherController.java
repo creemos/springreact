@@ -10,6 +10,7 @@ import ru.springreact.springreact.repo.TeacherRepository;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/teachers")
 public class TeacherController {
 
