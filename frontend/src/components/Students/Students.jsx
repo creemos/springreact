@@ -7,7 +7,9 @@ const Students = () => {
   const [allStudents, setAllStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showStudentModal, setShowStudentModal] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [currentStudent, setCurrentStudent] = useState({
+    id: "",
     firstname: "",
     patronymic: "",
     lastname: "",
@@ -30,53 +32,60 @@ const Students = () => {
       .delete(`http://localhost:9090/api/students/${id}`)
       .then((res) => {
         fetchStudents();
+        console.log(`User with no.${id} deleted!`);
       })
       .then(setIsLoading(false));
   };
 
-  const update = (user) => {
-    console.log(user);
-    setCurrentStudent((prevState) => {
-      return { ...prevState, ...user};
-    });
-  };
-
   useEffect(() => {
-    console.log(currentStudent)
-  }, [currentStudent])
+    if (currentStudent !== 1 && showStudentModal === true) {
+      setIsLoading(false);
+    }
+  }, [currentStudent, showStudentModal]);
 
   const editStudent = (id) => {
     console.log(`Select student no.${id}`);
     setIsLoading(true);
-    axios.get(`http://localhost:9090/api/students/${id}`).then((res) => {
-      setIsLoading(false);
-      setShowStudentModal(true);
-      update({
-        firstname: res.data.firstname,
-        patronymic: res.data.patronymic,
-        lastname: res.data.lastname,
-        gender: res.data.gender,
-      });
-      console.log(currentStudent);
-    });
+    setEditMode(true);
+    axios
+      .get(`http://localhost:9090/api/students/${id}`)
+      .then((res) => setCurrentStudent(res.data))
+      .then(setShowStudentModal(true));
   };
 
   useEffect(() => {
-    fetchStudents();
+    if (showStudentModal === false) {
+      fetchStudents();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showStudentModal]);
 
   const onSubmit = (data) => {
-    axios
-      .post("http://localhost:9090/api/students", data, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "content-type": "application/json",
-        },
-      })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
-      .then(fetchStudents());
+    if (!editMode) {
+      axios
+        .post("http://localhost:9090/api/students", data, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "content-type": "application/json",
+          },
+        })
+        .then((res) =>
+          console.log(`Adding user ${res.data.firstname} no.${res.data.id}`)
+        )
+        .catch((err) => console.log(err));
+    } else {
+      axios.put(
+        `http://localhost:9090/api/students/${currentStudent.id}`,
+        data,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "content-type": "application/json",
+          },
+        }
+      );
+      setEditMode(false);
+    }
     setShowStudentModal(false);
   };
 

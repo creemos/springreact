@@ -37,6 +37,17 @@ public class StudentController {
         return studentRepository.save(student);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable(value = "id") long id, @RequestBody Student student) {
+        Student newStudent = studentRepository.findById(id).get();
+        newStudent.setFirstname(student.getFirstname());
+        newStudent.setPatronymic(student.getPatronymic());
+        newStudent.setLastname(student.getLastname());
+        newStudent.setGender(student.getGender());
+        final Student updatedStudent = studentRepository.save(newStudent);
+        return ResponseEntity.ok(updatedStudent);
+    }
+
     @DeleteMapping(value = "/{id}")
     void deleteStudent(@PathVariable Long id) {
         studentRepository.deleteById(id);
