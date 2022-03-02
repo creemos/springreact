@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "./../Loader/Loader";
 import TeacherModal from "./TeacherModal";
+
 const Teachers = () => {
   const [allTeachers, setAllTeachers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

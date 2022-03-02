@@ -1,7 +1,4 @@
 package ru.springreact.springreact.model;
-
-
-
 import javax.persistence.*;
 
 @Entity
@@ -18,6 +15,9 @@ public class Teacher {
     private Integer year;
     private String gender;
     private String subject;
+
+    @OneToOne(mappedBy = "teacher")
+    private SchoolClass schoolClass;
 
     public Teacher() {
     }

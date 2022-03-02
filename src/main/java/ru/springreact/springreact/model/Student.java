@@ -8,17 +8,20 @@ import javax.persistence.*;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long student_id;
 
     private String firstname;
     private String patronymic;
     private String lastname;
     private String gender;
 
+
     public Student() {
     }
 
-    public Student(String firstname, String patronymic, String lastname, String gender) {
+    public Student(Long id, String firstname, String patronymic, String lastname, String gender,
+            SchoolClass schoolclass) {
+        this.student_id = id;
         this.firstname = firstname;
         this.patronymic = patronymic;
         this.lastname = lastname;
@@ -26,11 +29,11 @@ public class Student {
     }
 
     public Long getId() {
-        return id;
+        return student_id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.student_id = id;
     }
 
     public String getFirstname() {
