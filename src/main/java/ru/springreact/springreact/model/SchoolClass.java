@@ -1,7 +1,11 @@
 package ru.springreact.springreact.model;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
+
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Entity
 @Table(name = "classes")
@@ -14,23 +18,27 @@ public class SchoolClass {
     private String code;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id")
+    @JoinColumn(name = "id")
     private Teacher teacher;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id")
-    private Collection<Student> students;
+    @OneToMany(mappedBy = "schoolclass", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Student> students = new ArrayList<>();
 
 
-    public Collection<Student> getStudents() {
+    public List<Student> getStudents() {
         return this.students;
     }
 
     public SchoolClass() {
     }
 
+    public void addStudent(Student student) {
+        students.add(student);
+        student.setSchoolClass(this);
+    }
 
-    public SchoolClass(Long class_id, Long year, String code, Teacher teacher, Collection<Student> students) {
+
+    public SchoolClass(Long class_id, Long year, String code, Teacher teacher, List<Student> students) {
         this.class_id = class_id;
         this.year = year;
         this.code = code;
@@ -39,7 +47,7 @@ public class SchoolClass {
     }
     
     
-    public void setStudents(Collection<Student> students) {
+    public void setStudents(List<Student> students) {
         this.students = students;
     }
 

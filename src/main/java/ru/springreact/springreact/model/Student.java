@@ -15,56 +15,11 @@ public class Student {
     private String lastname;
     private String gender;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private SchoolClass schoolClass;
 
-    public Student() {
+    public void setSchoolClass(SchoolClass schoolClass) {
     }
 
-    public Student(Long id, String firstname, String patronymic, String lastname, String gender,
-            SchoolClass schoolclass) {
-        this.student_id = id;
-        this.firstname = firstname;
-        this.patronymic = patronymic;
-        this.lastname = lastname;
-        this.gender = gender;
-    }
 
-    public Long getId() {
-        return student_id;
-    }
-
-    public void setId(Long id) {
-        this.student_id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
 }
