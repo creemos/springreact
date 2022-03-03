@@ -9,7 +9,7 @@ const Students = () => {
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentStudent, setCurrentStudent] = useState({
-    id: "",
+    student_id: "",
     firstname: "",
     patronymic: "",
     lastname: "",
@@ -108,7 +108,7 @@ const Students = () => {
             <tbody>
               {allStudents.map((student) => {
                 return (
-                  <tr key={student.id}>
+                  <tr key={student.student_id}>
                     <td>{student.firstname}</td>
                     <td>{student.patronymic}</td>
                     <td>{student.lastname}</td>
@@ -116,13 +116,13 @@ const Students = () => {
                     <td>
                       <button
                         className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => editStudent(student.id)}
+                        onClick={() => editStudent(student.student_id)}
                       >
                         Изменить
                       </button>
                       <button
                         className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => deleteStudent(student.id)}
+                        onClick={() => deleteStudent(student.student_id)}
                       >
                         Удалить
                       </button>

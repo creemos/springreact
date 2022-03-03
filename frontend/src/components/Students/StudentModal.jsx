@@ -5,7 +5,7 @@ const StudentModal = ({onSubmit, data}) => {
   const { register, handleSubmit } = useForm();
   return (
     <form className="mt-5 border-1" onSubmit={handleSubmit(onSubmit)}>
-      <input name="firstname" placeholder={data.firstname?data.firstname:"Имя"} {...register("firstname", { required: true })} className="m-5 p-2 border border-1" />
+      <input placeholder={data.firstname?data.firstname:"Имя"} {...register("firstname", { required: true })} className="m-5 p-2 border border-1" />
       <input placeholder={data.patronymic?data.patronymic:"Отчество"} {...register("patronymic", { required: true })} className="m-5 p-2 border border-1" />
       <input placeholder={data.lastname?data.lastname:"Фамилия"} {...register("lastname", { required: true })} className="m-5 p-2 border border-1" />
       <select {...register("gender")} placeholder="Пол">

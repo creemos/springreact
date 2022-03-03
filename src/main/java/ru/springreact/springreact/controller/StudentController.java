@@ -20,9 +20,9 @@ public class StudentController {
         return studentRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Student> findStudentById(@PathVariable(value = "id") long id) {
-        Optional<Student> student = studentRepository.findById(id);
+    @GetMapping("/{student_id}")
+    public ResponseEntity<Student> findStudentById(@PathVariable(value = "student_id") long student_id) {
+        Optional<Student> student = studentRepository.findById(student_id);
         if (student.isPresent()) {
             return ResponseEntity.ok().body(student.get());
         } else {
@@ -35,9 +35,9 @@ public class StudentController {
         return studentRepository.save(student);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable(value = "id") long id, @RequestBody Student student) {
-        Student newStudent = studentRepository.findById(id).get();
+    @PutMapping("/{student_id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable(value = "student_id") Long student_id, @RequestBody Student student) {
+        Student newStudent = studentRepository.findById(student_id).get();
         newStudent.setFirstname(student.getFirstname());
         newStudent.setPatronymic(student.getPatronymic());
         newStudent.setLastname(student.getLastname());
@@ -46,9 +46,9 @@ public class StudentController {
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @DeleteMapping(value = "/{id}")
-    void deleteStudent(@PathVariable Long id) {
-        studentRepository.deleteById(id);
+    @DeleteMapping(value = "/{student_id}")
+    void deleteStudent(@PathVariable Long student_id) {
+        studentRepository.deleteById(student_id);
     }
 
 }

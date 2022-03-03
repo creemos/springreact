@@ -1,11 +1,8 @@
 package ru.springreact.springreact.model;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.*;
-
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Entity
 @Table(name = "classes")
@@ -21,7 +18,7 @@ public class SchoolClass {
     @JoinColumn(name = "id")
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "schoolclass", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Student> students = new ArrayList<>();
 
 
