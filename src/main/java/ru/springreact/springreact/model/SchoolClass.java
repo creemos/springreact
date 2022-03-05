@@ -15,10 +15,10 @@ public class SchoolClass {
     private String code;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
     private List<Student> students = new ArrayList<>();
 
 
@@ -29,21 +29,23 @@ public class SchoolClass {
     public SchoolClass() {
     }
 
-    public void addStudent(Student student) {
-        students.add(student);
-        student.setSchoolClass(this);
-    }
-
-
     public SchoolClass(Long class_id, Long year, String code, Teacher teacher, List<Student> students) {
-        this.class_id = class_id;
         this.year = year;
         this.code = code;
         this.teacher = teacher;
         this.students = students;
     }
-    
-    
+
+    public void addStudent(Student student) {
+        students.add(student);
+        student.setSchoolClass(this);
+    }
+
+    public void addTeacher(Teacher teacher) {
+       this.teacher = teacher;
+
+    }
+
     public void setStudents(List<Student> students) {
         this.students = students;
     }

@@ -2,6 +2,8 @@ package ru.springreact.springreact.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "students")
 
@@ -15,12 +17,23 @@ public class Student {
     private String lastname;
     private String gender;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "class_id")
+    @JsonIgnore
     private SchoolClass schoolClass;
 
     public SchoolClass getSchoolClass() {
         return schoolClass;
+    }
+
+    public Student() {
+    }
+
+    public Student(String firstname, String patronymic, String lastname, String gender) {
+        this.firstname = firstname;
+        this.patronymic = patronymic;
+        this.lastname = lastname;
+        this.gender = gender;
     }
 
     public void setSchoolClass(SchoolClass schoolClass) {

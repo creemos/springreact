@@ -70,12 +70,12 @@ const Students = () => {
           },
         })
         .then((res) =>
-          console.log(`Adding user ${res.data.firstname} no.${res.data.id}`)
+          console.log(`Adding user ${res.data.firstname} no.${res.data.student_id}`)
         )
         .catch((err) => console.log(err));
     } else {
       axios.put(
-        `http://localhost:9090/api/students/${currentStudent.id}`,
+        `http://localhost:9090/api/students/${currentStudent.student_id}`,
         data,
         {
           headers: {
