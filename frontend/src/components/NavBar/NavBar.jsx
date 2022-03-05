@@ -23,6 +23,16 @@ const NavBar = () => {
           Студенческий состав
         </NavLink>
       </div>
+      <div className="m-5 text-xl w-36">
+        <NavLink
+          to="/classes"
+          className={({ isActive }) =>
+            isActive ? "bg-lime-200 font-bold" : ""
+          }
+        >
+          Классы
+        </NavLink>
+      </div>
     </div>
   );
 };

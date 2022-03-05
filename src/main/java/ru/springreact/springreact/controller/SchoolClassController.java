@@ -1,8 +1,11 @@
 package ru.springreact.springreact.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,22 +31,30 @@ public class SchoolClassController {
         return schoolClassRepository.findAll();
     }
 
+    @GetMapping("/{class_id}")
+    public ResponseEntity<SchoolClass> findStudentById(@PathVariable(value = "class_id") long class_id) {
+        Optional<SchoolClass> schoolClass = schoolClassRepository.findById(class_id);
+        if (schoolClass.isPresent()) {
+            return ResponseEntity.ok().body(schoolClass.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping(consumes = {"application/xml","application/json"})
     public SchoolClass saveSchoolClass(@RequestBody SchoolClass schoolClass){
         return schoolClassRepository.save(schoolClass);
     }
-/*
+
     @PutMapping("/{class_id}")
     public ResponseEntity<SchoolClass> updateSchoolClass(@PathVariable(value = "class_id") Long class_id, @RequestBody SchoolClass schoolClass) {
         SchoolClass newSchoolClass = schoolClassRepository.findById(class_id).get();
         newSchoolClass.setCode(schoolClass.getCode());
         newSchoolClass.setYear(schoolClass.getYear());
-        newSchoolClass.setTeacher(schoolClass.getTeacher());
-        newSchoolClass.setStudents(schoolClass.getStudents());
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
         return ResponseEntity.ok(updatedSchoolClass);
     }
-*/
+
     @PutMapping("/{class_id}/addstudent")
     public ResponseEntity<SchoolClass> addStudent(@PathVariable(value = "class_id") Long class_id, @RequestBody Student student) {
         SchoolClass newSchoolClass = schoolClassRepository.findById(class_id).get();
@@ -58,5 +69,10 @@ public class SchoolClassController {
         newSchoolClass.addTeacher(teacher);
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
         return ResponseEntity.ok(updatedSchoolClass);
+    }
+
+    @DeleteMapping(value = "/{class_id}")
+    void deleteSchoolClass(@PathVariable Long class_id) {
+        schoolClassRepository.deleteById(class_id);
     }
 }
