@@ -110,7 +110,6 @@ const SchoolClasses = () => {
     axios
     .get(`http://localhost:9090/api/classes/${class_id}`)
     .then((res) => setCurrentSchoolClass(res.data))
-    .then(console.log(currentSchoolClass))
     .then(setShowChangeTeacherModal(true))
   }
 
