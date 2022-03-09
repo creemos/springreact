@@ -51,6 +51,7 @@ public class SchoolClassController {
         SchoolClass newSchoolClass = schoolClassRepository.findById(class_id).get();
         newSchoolClass.setCode(schoolClass.getCode());
         newSchoolClass.setYear(schoolClass.getYear());
+        newSchoolClass.setTeacher(schoolClass.getTeacher());
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
         return ResponseEntity.ok(updatedSchoolClass);
     }

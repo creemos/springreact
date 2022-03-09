@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import Loader from "./../Loader/Loader";
 import axios from "axios";
 import SchoolClassModal from "./SchoolClassModal";
+import ChangeTeacherModal from "./ChangeTeacherModal";
 
 const SchoolClasses = () => {
   const [allSchoolClasses, setAllSchoolClasses] = useState([]);
   const [isShowSchoolClassModal, setIsShowSchoolClassModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [showChangeTeacherModal, setShowChangeTeacherModal] = useState(false)
   const [currentSchoolClass, setCurrentSchoolClass] = useState({
     id: "",
     code: "",
@@ -42,6 +44,7 @@ const SchoolClasses = () => {
     axios
       .get(`http://localhost:9090/api/classes/${id}`)
       .then((res) => setCurrentSchoolClass(res.data))
+      .then(console.log(currentSchoolClass))
       .then(setIsShowSchoolClassModal(true));
   };
 
@@ -57,6 +60,7 @@ const SchoolClasses = () => {
   };
 
   const onSubmit = (data) => {
+    console.log(data)
     if (!editMode) {
       axios
         .post("http://localhost:9090/api/classes", data, {
@@ -87,6 +91,29 @@ const SchoolClasses = () => {
     setIsShowSchoolClassModal(false);
   };
 
+  const onChangeTeacher = (data) => {
+    console.log(data.teacher)
+    axios.put(`http://localhost:9090/api/classes/${currentSchoolClass.id}/addteacher`, data.teacher, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "application/json",
+      },
+    })
+    .catch(function(error) {
+      alert('Данный преподаватель уже назначен классным руководителем!')
+    })
+    setShowChangeTeacherModal(false)
+    fetchAllSchoolClasses()
+  }
+
+  const editTeacher = (class_id) => {
+    axios
+    .get(`http://localhost:9090/api/classes/${class_id}`)
+    .then((res) => setCurrentSchoolClass(res.data))
+    .then(console.log(currentSchoolClass))
+    .then(setShowChangeTeacherModal(true))
+  }
+
   useEffect(() => {
     if (currentSchoolClass !== 1 && isShowSchoolClassModal === true) {
       setIsLoading(false);
@@ -97,15 +124,18 @@ const SchoolClasses = () => {
     <div className="w-full flex flex-col items-center justify-between">
       {isLoading ? (
         <Loader />
-      ) : isShowSchoolClassModal === false ? (
+      ) : isShowSchoolClassModal ? (
+        <SchoolClassModal onSubmit={onSubmit} data={currentSchoolClass} />
+      ) : showChangeTeacherModal? <ChangeTeacherModal onSubmit={onChangeTeacher} data={currentSchoolClass}/> 
+      :(
         <div className="w-full">
           <table className="text-center border-2 mt-5 w-full">
             <thead className="bg-slate-400">
               <tr>
                 <th>Год обучения</th>
                 <th>Мнемокод</th>
-                <th>Классный руководитель</th>
-                <th>Список учеников</th>
+                <th className=" w-1/4">Классный руководитель</th>
+                <th className=" w-1/4">Список учеников</th>
                 <th></th>
               </tr>
             </thead>
@@ -115,10 +145,12 @@ const SchoolClasses = () => {
                   <tr key={schoolClass.id}>
                     <td>{schoolClass.year}</td>
                     <td>{schoolClass.code}</td>
-                    <td>
-                      {schoolClass.teacher
-                        ? `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
-                        : ""}
+                    <td className="mt-auto mb-0">
+                      <div className="flex justify-center">
+                        {schoolClass.teacher
+                          ? `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
+                          : <button className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => editTeacher(schoolClass.id)}>+</button>}
+                      </div>
                     </td>
                     <td>
                       <ul>
@@ -129,6 +161,7 @@ const SchoolClasses = () => {
                             </li>
                           );
                         })}
+                        <button className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">+</button>
                       </ul>
                     </td>
                     <td>
@@ -142,7 +175,9 @@ const SchoolClasses = () => {
                       </button>
                       <button
                         className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => {deleteSchoolClass(schoolClass.id)}}
+                        onClick={() => {
+                          deleteSchoolClass(schoolClass.id);
+                        }}
                       >
                         Удалить
                       </button>
@@ -153,12 +188,12 @@ const SchoolClasses = () => {
             </tbody>
           </table>
           <button
-          onClick={() => setIsShowSchoolClassModal(true)}
-          className="self-center mt-5 w-1/2  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >Добавить класс</button>
+            onClick={() => setIsShowSchoolClassModal(true)}
+            className="self-center mt-5 w-1/2  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Добавить класс
+          </button>
         </div>
-      ) : (
-        <SchoolClassModal onSubmit={onSubmit} data={currentSchoolClass} />
       )}
     </div>
   );
