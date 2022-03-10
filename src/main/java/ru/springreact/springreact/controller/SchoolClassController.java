@@ -31,6 +31,11 @@ public class SchoolClassController {
         return schoolClassRepository.findAll();
     }
 
+    @GetMapping("/with_teachers")
+    public Iterable<SchoolClass> findByTeacherIsNotNull() {
+        return schoolClassRepository.findByTeacherIsNotNull();
+    };
+
     @GetMapping("/{class_id}")
     public ResponseEntity<SchoolClass> findStudentById(@PathVariable(value = "class_id") long class_id) {
         Optional<SchoolClass> schoolClass = schoolClassRepository.findById(class_id);

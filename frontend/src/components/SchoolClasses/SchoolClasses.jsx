@@ -27,14 +27,15 @@ const SchoolClasses = () => {
 
   useEffect(() => {
     fetchAllSchoolClasses();
+    return setIsLoading(false)
   }, []);
 
   useEffect(() => {
-    if (isShowSchoolClassModal === false || isLoading === false) {
+    if (isShowSchoolClassModal === false || isLoading === false || showChangeTeacherModal === false) {
       fetchAllSchoolClasses();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShowSchoolClassModal]);
+  }, [isShowSchoolClassModal, showChangeTeacherModal]);
 
   const editSchoolClass = (id) => {
     console.log(`Select class no.${id}`);
@@ -78,7 +79,7 @@ const SchoolClasses = () => {
     } else {
       axios.put(
         `http://localhost:9090/api/classes/${currentSchoolClass.id}`,
-        data,
+        {...data, teacher: currentSchoolClass.teacher},
         {
           headers: {
             "Access-Control-Allow-Origin": "*",

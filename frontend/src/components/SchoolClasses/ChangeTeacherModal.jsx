@@ -6,32 +6,30 @@ import axios from "axios";
 const ChangeTeacherModal = ({ onSubmit, data }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [allTeachers, setAllTeachers] = useState([]);
-  const [allClasses, setAllClasses] = useState([]);
+  const [allClassesWithTeacher, setAllClassesWithTeacher] = useState([]);
   const [availableTeachers, setAvailableTeachers] = useState([]);
   const { register, handleSubmit } = useForm();
 
-  useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get("http://localhost:9090/api/teachers")
-        .then((res) => setAllTeachers(res.data));
+  const fetchData = () => {
+    axios
+      .get("http://localhost:9090/api/teachers")
+      .then((res) => setAllTeachers(res.data));
+    axios
+      .get("http://localhost:9090/api/classes/with_teachers")
+      .then((res) => setAllClassesWithTeacher(res.data))
+      .then(() => {
+        const newArr = [];
+        allClassesWithTeacher.map((x) => newArr.push(x.teacher));
+        const result = allTeachers.filter(
+          ({ id: item1 }) => !newArr.some(({ id: item2 }) => item1 === item2)
+        )
+        setAvailableTeachers(result)})
 
-      axios
-        .get("http://localhost:9090/api/classes")
-        .then((res) => setAllClasses(res.data));
-    };
-
-    fetchData(); 
-    const results = allTeachers.filter(
-      ({ teacher_id: id1 }) =>
-        !allClasses.some(({ teacher_id: id2 }) => id2 === id1)
-    );
-    setAvailableTeachers(results);
-  }, []);
+  };
 
   useEffect(() => {
-   console.log(availableTeachers)
-    setIsLoading(false);
+    fetchData();
+    setIsLoading(false)
   }, [availableTeachers]);
 
   return isLoading ? (

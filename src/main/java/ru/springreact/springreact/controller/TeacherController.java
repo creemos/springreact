@@ -30,10 +30,6 @@ public class TeacherController {
         }
     }
 
-    @GetMapping("/available")
-    public Iterable<Teacher> findAvailableTeachers() {
-        return teacherRepository.findByTeacherIdIsNull();
-    }
 
     @PostMapping(consumes = {"application/xml","application/json"})
     public Teacher saveStudent(@RequestBody Teacher teacher) {
