@@ -10,11 +10,11 @@ const ChangeTeacherModal = ({ onSubmit, data }) => {
   const [availableTeachers, setAvailableTeachers] = useState([]);
   const { register, handleSubmit } = useForm();
 
-  const fetchData = () => {
-    axios
+  const fetchData = async () => {
+    await axios
       .get("http://localhost:9090/api/teachers")
       .then((res) => setAllTeachers(res.data));
-    axios
+    await axios
       .get("http://localhost:9090/api/classes/with_teachers")
       .then((res) => setAllClassesWithTeacher(res.data))
       .then(() => {
@@ -22,14 +22,14 @@ const ChangeTeacherModal = ({ onSubmit, data }) => {
         allClassesWithTeacher.map((x) => newArr.push(x.teacher));
         const result = allTeachers.filter(
           ({ id: item1 }) => !newArr.some(({ id: item2 }) => item1 === item2)
-        )
-        setAvailableTeachers(result)})
-
+        );
+        setAvailableTeachers(result);
+      });
+    setIsLoading(false);
   };
 
   useEffect(() => {
     fetchData();
-    setIsLoading(false)
   }, [availableTeachers]);
 
   return isLoading ? (

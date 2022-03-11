@@ -7,7 +7,7 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long teacher_id;
+    private Long teacherId;
 
     private String firstname;
     private String patronymic;
@@ -30,13 +30,13 @@ public class Teacher {
         this.gender = gender;
         this.subject = subject;
     }
-
+    
     public Long getId() {
-        return teacher_id;
+        return teacherId;
     }
 
-    public void setId(Long teacher_id) {
-        this.teacher_id = teacher_id;
+    public void setId(Long teacherId) {
+        this.teacherId = teacherId;
     }
 
     public String getFirstname() {

@@ -28,15 +28,21 @@ const Teachers = () => {
       .then(setIsLoading(false));
   };
 
-  const deleteTeacher = (id) => {
+  const deleteTeacher = async(id) => {
     setIsLoading(true);
-    axios
+    await axios.put(`http://localhost:9090/api/classes/find_relation`, id, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "content-type": "application/json",
+      },
+    })
+    await axios
       .delete(`http://localhost:9090/api/teachers/${id}`)
       .then((res) => {
         fetchTeachers();
         console.log(`User with no.${id} deleted!`);
       })
-      .then(setIsLoading(false));
+      .then(setIsLoading(false))
   };
 
   useEffect(() => {

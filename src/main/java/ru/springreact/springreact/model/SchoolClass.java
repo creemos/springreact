@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "classes")
 public class SchoolClass {
@@ -82,4 +83,5 @@ public class SchoolClass {
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
+
 }

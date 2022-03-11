@@ -9,7 +9,7 @@ const SchoolClasses = () => {
   const [isShowSchoolClassModal, setIsShowSchoolClassModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [showChangeTeacherModal, setShowChangeTeacherModal] = useState(false)
+  const [showChangeTeacherModal, setShowChangeTeacherModal] = useState(false);
   const [currentSchoolClass, setCurrentSchoolClass] = useState({
     id: "",
     code: "",
@@ -27,13 +27,17 @@ const SchoolClasses = () => {
 
   useEffect(() => {
     fetchAllSchoolClasses();
-    return setIsLoading(false)
   }, []);
 
   useEffect(() => {
-    if (isShowSchoolClassModal === false || isLoading === false || showChangeTeacherModal === false) {
+    if (
+      isShowSchoolClassModal === false ||
+      isLoading === false ||
+      showChangeTeacherModal === false
+    ) {
       fetchAllSchoolClasses();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isShowSchoolClassModal, showChangeTeacherModal]);
 
@@ -51,6 +55,7 @@ const SchoolClasses = () => {
 
   const deleteSchoolClass = (id) => {
     setIsLoading(true);
+    
     axios
       .delete(`http://localhost:9090/api/classes/${id}`)
       .then((res) => {
@@ -60,10 +65,10 @@ const SchoolClasses = () => {
       .then(setIsLoading(false));
   };
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    console.log(data);
     if (!editMode) {
-      axios
+      await axios
         .post("http://localhost:9090/api/classes", data, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -77,9 +82,9 @@ const SchoolClasses = () => {
         )
         .catch((err) => console.log(err));
     } else {
-      axios.put(
+      await axios.put(
         `http://localhost:9090/api/classes/${currentSchoolClass.id}`,
-        {...data, teacher: currentSchoolClass.teacher},
+        { ...data, teacher: currentSchoolClass.teacher },
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -93,26 +98,31 @@ const SchoolClasses = () => {
   };
 
   const onChangeTeacher = (data) => {
-    console.log(data.teacher)
-    axios.put(`http://localhost:9090/api/classes/${currentSchoolClass.id}/addteacher`, data.teacher, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "content-type": "application/json",
-      },
-    })
-    .catch(function(error) {
-      alert('Данный преподаватель уже назначен классным руководителем!')
-    })
-    setShowChangeTeacherModal(false)
-    fetchAllSchoolClasses()
-  }
+    console.log(data.teacher);
+    axios
+      .put(
+        `http://localhost:9090/api/classes/${currentSchoolClass.id}/addteacher`,
+        data.teacher,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "content-type": "application/json",
+          },
+        }
+      )
+      .catch(function (error) {
+        alert("Данный преподаватель уже назначен классным руководителем!");
+      });
+    setShowChangeTeacherModal(false);
+    fetchAllSchoolClasses();
+  };
 
   const editTeacher = (class_id) => {
     axios
-    .get(`http://localhost:9090/api/classes/${class_id}`)
-    .then((res) => setCurrentSchoolClass(res.data))
-    .then(setShowChangeTeacherModal(true))
-  }
+      .get(`http://localhost:9090/api/classes/${class_id}`)
+      .then((res) => setCurrentSchoolClass(res.data))
+      .then(setShowChangeTeacherModal(true));
+  };
 
   useEffect(() => {
     if (currentSchoolClass !== 1 && isShowSchoolClassModal === true) {
@@ -126,8 +136,12 @@ const SchoolClasses = () => {
         <Loader />
       ) : isShowSchoolClassModal ? (
         <SchoolClassModal onSubmit={onSubmit} data={currentSchoolClass} />
-      ) : showChangeTeacherModal? <ChangeTeacherModal onSubmit={onChangeTeacher} data={currentSchoolClass}/> 
-      :(
+      ) : showChangeTeacherModal ? (
+        <ChangeTeacherModal
+          onSubmit={onChangeTeacher}
+          data={currentSchoolClass}
+        />
+      ) : (
         <div className="w-full">
           <table className="text-center border-2 mt-5 w-full">
             <thead className="bg-slate-400">
@@ -147,9 +161,16 @@ const SchoolClasses = () => {
                     <td>{schoolClass.code}</td>
                     <td className="mt-auto mb-0">
                       <div className="flex justify-center">
-                        {schoolClass.teacher
-                          ? `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
-                          : <button className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" onClick={() => editTeacher(schoolClass.id)}>+</button>}
+                        {schoolClass.teacher ? (
+                          `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
+                        ) : (
+                          <button
+                            className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
+                            onClick={() => editTeacher(schoolClass.id)}
+                          >
+                            +
+                          </button>
+                        )}
                       </div>
                     </td>
                     <td>
@@ -161,7 +182,9 @@ const SchoolClasses = () => {
                             </li>
                           );
                         })}
-                        <button className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">+</button>
+                        <button className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
+                          +
+                        </button>
                       </ul>
                     </td>
                     <td>

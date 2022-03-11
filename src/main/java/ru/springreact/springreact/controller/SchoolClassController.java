@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import ru.springreact.springreact.model.SchoolClass;
 import ru.springreact.springreact.model.Student;
 import ru.springreact.springreact.model.Teacher;
@@ -35,6 +36,8 @@ public class SchoolClassController {
     public Iterable<SchoolClass> findByTeacherIsNotNull() {
         return schoolClassRepository.findByTeacherIsNotNull();
     };
+
+    
 
     @GetMapping("/{class_id}")
     public ResponseEntity<SchoolClass> findStudentById(@PathVariable(value = "class_id") long class_id) {
@@ -77,8 +80,21 @@ public class SchoolClassController {
         return ResponseEntity.ok(updatedSchoolClass);
     }
 
+    @PutMapping("/find_relation")
+    void findRelation(@RequestBody long teacherId){
+        SchoolClass schoolClass = schoolClassRepository.findByTeacher_TeacherId(teacherId);
+        if (schoolClass != null) {
+            schoolClass.setTeacher(null);
+            schoolClassRepository.save(schoolClass);
+        } 
+    } 
+
     @DeleteMapping(value = "/{class_id}")
     void deleteSchoolClass(@PathVariable Long class_id) {
+        SchoolClass schoolClass = schoolClassRepository.findById(class_id).get();
+        if (schoolClass.getTeacher() != null){
+            schoolClass.setTeacher(null);
+        }
         schoolClassRepository.deleteById(class_id);
     }
 }

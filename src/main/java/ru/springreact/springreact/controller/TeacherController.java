@@ -21,8 +21,8 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Teacher> findTeacherById(@PathVariable(value = "id") long teacher_id) {
-        Optional<Teacher> teacher = teacherRepository.findById(teacher_id);
+    public ResponseEntity<Teacher> findTeacherById(@PathVariable(value = "id") long teacherId) {
+        Optional<Teacher> teacher = teacherRepository.findById(teacherId);
         if (teacher.isPresent()) {
             return ResponseEntity.ok().body(teacher.get());
         } else {
@@ -36,14 +36,14 @@ public class TeacherController {
         return teacherRepository.save(teacher);
     }
 
-    @DeleteMapping(value = "/{teacher_id}")
-    void deleteTeacher(@PathVariable Long teacher_id) {
-        teacherRepository.deleteById(teacher_id);
+    @DeleteMapping(value = "/{teacherId}")
+    void deleteTeacher(@PathVariable Long teacherId) {
+        teacherRepository.deleteById(teacherId);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Teacher> updateTeacher(@PathVariable(value = "id") long teacher_id, @RequestBody Teacher teacher) {
-        Teacher newTeacher = teacherRepository.findById(teacher_id).get();
+    public ResponseEntity<Teacher> updateTeacher(@PathVariable(value = "id") long teacherId, @RequestBody Teacher teacher) {
+        Teacher newTeacher = teacherRepository.findById(teacherId).get();
         newTeacher.setFirstname(teacher.getFirstname());
         newTeacher.setPatronymic(teacher.getPatronymic());
         newTeacher.setLastname(teacher.getLastname());
