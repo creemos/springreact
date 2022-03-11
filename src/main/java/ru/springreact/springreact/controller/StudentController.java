@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.springreact.springreact.model.Student;
 import ru.springreact.springreact.repo.StudentRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,9 +21,9 @@ public class StudentController {
         return studentRepository.findAll();
     }
 
-    @GetMapping("/{student_id}")
-    public ResponseEntity<Student> findStudentById(@PathVariable(value = "student_id") long student_id) {
-        Optional<Student> student = studentRepository.findById(student_id);
+    @GetMapping("/{studentId}")
+    public ResponseEntity<Student> findStudentById(@PathVariable(value = "studentId") long studentId) {
+        Optional<Student> student = studentRepository.findById(studentId);
         if (student.isPresent()) {
             return ResponseEntity.ok().body(student.get());
         } else {
@@ -30,14 +31,19 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/available_students")
+    public List<Student> findAvailableStudents(){
+        return studentRepository.findBySchoolClass_ClassIdNotNull();
+    }
+
     @PostMapping(consumes = {"application/xml","application/json"})
     public Student saveStudent(@RequestBody Student student) {
         return studentRepository.save(student);
     }
 
-    @PutMapping("/{student_id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable(value = "student_id") Long student_id, @RequestBody Student student) {
-        Student newStudent = studentRepository.findById(student_id).get();
+    @PutMapping("/{studentId}")
+    public ResponseEntity<Student> updateStudent(@PathVariable(value = "studentId") Long studentId, @RequestBody Student student) {
+        Student newStudent = studentRepository.findById(studentId).get();
         newStudent.setFirstname(student.getFirstname());
         newStudent.setPatronymic(student.getPatronymic());
         newStudent.setLastname(student.getLastname());
@@ -46,9 +52,9 @@ public class StudentController {
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @DeleteMapping(value = "/{student_id}")
-    void deleteStudent(@PathVariable Long student_id) {
-        studentRepository.deleteById(student_id);
+    @DeleteMapping(value = "/{studentId}")
+    void deleteStudent(@PathVariable Long studentId) {
+        studentRepository.deleteById(studentId);
     }
 
 }

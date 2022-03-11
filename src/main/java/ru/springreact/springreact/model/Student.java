@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long student_id;
+    private Long studentId;
 
     private String firstname;
     private String patronymic;
@@ -18,7 +18,7 @@ public class Student {
     private String gender;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id")
+    @JoinColumn(name = "classId")
     @JsonIgnore
     private SchoolClass schoolClass;
 
@@ -40,12 +40,12 @@ public class Student {
         this.schoolClass = schoolClass;
     }
 
-    public Long getStudent_id() {
-        return student_id;
+    public Long getstudentId() {
+        return studentId;
     }
 
-    public void setStudent_id(Long student_id) {
-        this.student_id = student_id;
+    public void setstudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
     public String getFirstname() {

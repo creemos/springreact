@@ -9,7 +9,7 @@ const Students = () => {
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentStudent, setCurrentStudent] = useState({
-    student_id: "",
+    studentId: "",
     firstname: "",
     patronymic: "",
     lastname: "",
@@ -70,12 +70,12 @@ const Students = () => {
           },
         })
         .then((res) =>
-          console.log(`Adding user ${res.data.firstname} no.${res.data.student_id}`)
+          console.log(`Adding user ${res.data.firstname} no.${res.data.studentId}`)
         )
         .catch((err) => console.log(err));
     } else {
       axios.put(
-        `http://localhost:9090/api/students/${currentStudent.student_id}`,
+        `http://localhost:9090/api/students/${currentStudent.studentId}`,
         data,
         {
           headers: {
@@ -108,7 +108,7 @@ const Students = () => {
             <tbody>
               {allStudents.map((student) => {
                 return (
-                  <tr key={student.student_id}>
+                  <tr key={student.studentId}>
                     <td>{student.firstname}</td>
                     <td>{student.patronymic}</td>
                     <td>{student.lastname}</td>
@@ -116,13 +116,13 @@ const Students = () => {
                     <td>
                       <button
                         className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => editStudent(student.student_id)}
+                        onClick={() => editStudent(student.studentId)}
                       >
                         Изменить
                       </button>
                       <button
                         className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => deleteStudent(student.student_id)}
+                        onClick={() => deleteStudent(student.studentId)}
                       >
                         Удалить
                       </button>

@@ -117,9 +117,9 @@ const SchoolClasses = () => {
     fetchAllSchoolClasses();
   };
 
-  const editTeacher = (class_id) => {
+  const editTeacher = (classId) => {
     axios
-      .get(`http://localhost:9090/api/classes/${class_id}`)
+      .get(`http://localhost:9090/api/classes/${classId}`)
       .then((res) => setCurrentSchoolClass(res.data))
       .then(setShowChangeTeacherModal(true));
   };

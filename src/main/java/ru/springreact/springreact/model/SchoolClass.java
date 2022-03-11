@@ -10,13 +10,13 @@ import javax.persistence.*;
 public class SchoolClass {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long class_id;
+    private Long classId;
 
     private Long year;
     private String code;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacherId")
     private Teacher teacher;
 
     @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
@@ -30,7 +30,7 @@ public class SchoolClass {
     public SchoolClass() {
     }
 
-    public SchoolClass(Long class_id, Long year, String code, Teacher teacher, List<Student> students) {
+    public SchoolClass(Long classId, Long year, String code, Teacher teacher, List<Student> students) {
         this.year = year;
         this.code = code;
         this.teacher = teacher;
@@ -53,11 +53,11 @@ public class SchoolClass {
 
 
     public Long getId() {
-        return this.class_id;
+        return this.classId;
     }
 
-    public void setId(Long class_id) {
-        this.class_id = class_id;
+    public void setId(Long classId) {
+        this.classId = classId;
     }
 
     public Long getYear() {
