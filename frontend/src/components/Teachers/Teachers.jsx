@@ -95,6 +95,7 @@ const Teachers = () => {
       setEditMode(false);
     }
     setShowTeacherModal(false);
+    fetchTeachers()
   };
 
   return (

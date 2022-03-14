@@ -19,7 +19,7 @@ public class SchoolClass {
     @JoinColumn(name = "teacherId")
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.MERGE)
     private List<Student> students = new ArrayList<>();
 
 

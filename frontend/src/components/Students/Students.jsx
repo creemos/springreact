@@ -60,9 +60,9 @@ const Students = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showStudentModal]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!editMode) {
-      axios
+      await axios
         .post("http://localhost:9090/api/students", data, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -74,7 +74,7 @@ const Students = () => {
         )
         .catch((err) => console.log(err));
     } else {
-      axios.put(
+      await axios.put(
         `http://localhost:9090/api/students/${currentStudent.studentId}`,
         data,
         {

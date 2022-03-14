@@ -3,6 +3,7 @@ import Loader from "./../Loader/Loader";
 import axios from "axios";
 import SchoolClassModal from "./SchoolClassModal";
 import ChangeTeacherModal from "./ChangeTeacherModal";
+import ChangeStudentsModal from "./ChangeStudentsModal";
 
 const SchoolClasses = () => {
   const [allSchoolClasses, setAllSchoolClasses] = useState([]);
@@ -10,6 +11,7 @@ const SchoolClasses = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showChangeTeacherModal, setShowChangeTeacherModal] = useState(false);
+  const [showChangeStudentsModal, setShowChangeStudentsModal] = useState(false);
   const [currentSchoolClass, setCurrentSchoolClass] = useState({
     id: "",
     code: "",
@@ -53,16 +55,24 @@ const SchoolClasses = () => {
       .then(setIsShowSchoolClassModal(true));
   };
 
-  const deleteSchoolClass = (id) => {
+  const deleteSchoolClass = async (id) => {
     setIsLoading(true);
-    
-    axios
-      .delete(`http://localhost:9090/api/classes/${id}`)
-      .then((res) => {
-        fetchAllSchoolClasses();
-        console.log(`Class with no.${id} deleted!`);
-      })
-      .then(setIsLoading(false));
+    const emptyArray = [];
+    await axios.put(
+      `http://localhost:9090/api/classes/${id}/deletestudent`,
+      emptyArray,
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "content-type": "application/json",
+        },
+      }
+    );
+    await axios.delete(`http://localhost:9090/api/classes/${id}`);
+
+    console.log(`Class with no.${id} deleted!`);
+    fetchAllSchoolClasses();
+    setIsLoading(false);
   };
 
   const onSubmit = async (data) => {
@@ -124,6 +134,11 @@ const SchoolClasses = () => {
       .then(setShowChangeTeacherModal(true));
   };
 
+  const editStudents = (schoolClass) => {
+    setCurrentSchoolClass(schoolClass);
+    setShowChangeStudentsModal(true);
+  };
+
   useEffect(() => {
     if (currentSchoolClass !== 1 && isShowSchoolClassModal === true) {
       setIsLoading(false);
@@ -141,6 +156,8 @@ const SchoolClasses = () => {
           onSubmit={onChangeTeacher}
           data={currentSchoolClass}
         />
+      ) : showChangeStudentsModal ? (
+        <ChangeStudentsModal data={currentSchoolClass} />
       ) : (
         <div className="w-full">
           <table className="text-center border-2 mt-5 w-full">
@@ -156,7 +173,7 @@ const SchoolClasses = () => {
             <tbody>
               {allSchoolClasses.map((schoolClass) => {
                 return (
-                  <tr key={schoolClass.id}>
+                  <tr key={Math.random(10)}>
                     <td>{schoolClass.year}</td>
                     <td>{schoolClass.code}</td>
                     <td className="mt-auto mb-0">
@@ -168,7 +185,7 @@ const SchoolClasses = () => {
                             className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
                             onClick={() => editTeacher(schoolClass.id)}
                           >
-                            +
+                            Редактировать
                           </button>
                         )}
                       </div>
@@ -177,13 +194,16 @@ const SchoolClasses = () => {
                       <ul>
                         {schoolClass.students.map((student) => {
                           return (
-                            <li key={student.student_id} className="ml-5 mr-5">
+                            <li key={Math.random(10)} className="ml-5 mr-5">
                               {`${student.firstname} ${student.patronymic} ${student.lastname}`}
                             </li>
                           );
                         })}
-                        <button className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">
-                          +
+                        <button
+                          className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
+                          onClick={() => editStudents(schoolClass)}
+                        >
+                          Редактировать
                         </button>
                       </ul>
                     </td>

@@ -33,7 +33,7 @@ public class StudentController {
 
     @GetMapping("/available_students")
     public List<Student> findAvailableStudents(){
-        return studentRepository.findBySchoolClass_ClassIdNotNull();
+        return studentRepository.findBySchoolClass_ClassIdIsNull();
     }
 
     @PostMapping(consumes = {"application/xml","application/json"})

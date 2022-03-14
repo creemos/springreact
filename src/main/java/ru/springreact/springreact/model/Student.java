@@ -17,7 +17,7 @@ public class Student {
     private String lastname;
     private String gender;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "classId")
     @JsonIgnore
     private SchoolClass schoolClass;

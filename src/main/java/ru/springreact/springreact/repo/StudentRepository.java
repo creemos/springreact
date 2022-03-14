@@ -9,5 +9,5 @@ import ru.springreact.springreact.model.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    List<Student> findBySchoolClass_ClassIdNotNull();
+    List<Student> findBySchoolClass_ClassIdIsNull();
 }

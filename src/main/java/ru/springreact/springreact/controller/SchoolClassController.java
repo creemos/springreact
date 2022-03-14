@@ -1,5 +1,6 @@
 package ru.springreact.springreact.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,15 @@ public class SchoolClassController {
         return ResponseEntity.ok(updatedSchoolClass);
     }
 
+    @PutMapping("/{classId}/deletestudent")
+    public ResponseEntity<SchoolClass> deleteStudentFromClass(@PathVariable(value = "classId") Long classId, @RequestBody List<Student> students) {
+        SchoolClass newSchoolClass = schoolClassRepository.findById(classId).get();
+        newSchoolClass.setStudents(students);
+        final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
+        return ResponseEntity.ok(updatedSchoolClass);
+
+    }
+
     @PutMapping("/find_relation")
     void findRelation(@RequestBody long teacherId){
         SchoolClass schoolClass = schoolClassRepository.findByTeacher_TeacherId(teacherId);
@@ -91,10 +101,8 @@ public class SchoolClassController {
 
     @DeleteMapping(value = "/{classId}")
     void deleteSchoolClass(@PathVariable Long classId) {
-        SchoolClass schoolClass = schoolClassRepository.findById(classId).get();
-        if (schoolClass.getTeacher() != null){
-            schoolClass.setTeacher(null);
-        }
+       
+
         schoolClassRepository.deleteById(classId);
     }
 }
