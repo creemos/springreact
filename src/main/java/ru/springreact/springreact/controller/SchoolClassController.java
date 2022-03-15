@@ -38,8 +38,6 @@ public class SchoolClassController {
         return schoolClassRepository.findByTeacherIsNotNull();
     };
 
-    
-
     @GetMapping("/{classId}")
     public ResponseEntity<SchoolClass> findStudentById(@PathVariable(value = "classId") long classId) {
         Optional<SchoolClass> schoolClass = schoolClassRepository.findById(classId);
@@ -50,13 +48,14 @@ public class SchoolClassController {
         }
     }
 
-    @PostMapping(consumes = {"application/xml","application/json"})
-    public SchoolClass saveSchoolClass(@RequestBody SchoolClass schoolClass){
+    @PostMapping(consumes = { "application/xml", "application/json" })
+    public SchoolClass saveSchoolClass(@RequestBody SchoolClass schoolClass) {
         return schoolClassRepository.save(schoolClass);
     }
 
     @PutMapping("/{classId}")
-    public ResponseEntity<SchoolClass> updateSchoolClass(@PathVariable(value = "classId") Long classId, @RequestBody SchoolClass schoolClass) {
+    public ResponseEntity<SchoolClass> updateSchoolClass(@PathVariable(value = "classId") Long classId,
+            @RequestBody SchoolClass schoolClass) {
         SchoolClass newSchoolClass = schoolClassRepository.findById(classId).get();
         newSchoolClass.setCode(schoolClass.getCode());
         newSchoolClass.setYear(schoolClass.getYear());
@@ -66,7 +65,8 @@ public class SchoolClassController {
     }
 
     @PutMapping("/{classId}/addstudent")
-    public ResponseEntity<SchoolClass> addStudent(@PathVariable(value = "classId") Long classId, @RequestBody Student student) {
+    public ResponseEntity<SchoolClass> addStudent(@PathVariable(value = "classId") Long classId,
+            @RequestBody Student student) {
         SchoolClass newSchoolClass = schoolClassRepository.findById(classId).get();
         newSchoolClass.addStudent(student);
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
@@ -74,7 +74,8 @@ public class SchoolClassController {
     }
 
     @PutMapping("/{classId}/addteacher")
-    public ResponseEntity<SchoolClass> addTeacher(@PathVariable(value = "classId") Long classId, @RequestBody Teacher teacher) {
+    public ResponseEntity<SchoolClass> addTeacher(@PathVariable(value = "classId") Long classId,
+            @RequestBody Teacher teacher) {
         SchoolClass newSchoolClass = schoolClassRepository.findById(classId).get();
         newSchoolClass.addTeacher(teacher);
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
@@ -82,7 +83,8 @@ public class SchoolClassController {
     }
 
     @PutMapping("/{classId}/deletestudent")
-    public ResponseEntity<SchoolClass> deleteStudentFromClass(@PathVariable(value = "classId") Long classId, @RequestBody List<Student> students) {
+    public ResponseEntity<SchoolClass> deleteStudentFromClass(@PathVariable(value = "classId") Long classId,
+            @RequestBody List<Student> students) {
         SchoolClass newSchoolClass = schoolClassRepository.findById(classId).get();
         newSchoolClass.setStudents(students);
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
@@ -91,18 +93,21 @@ public class SchoolClassController {
     }
 
     @PutMapping("/find_relation")
-    void findRelation(@RequestBody long teacherId){
+    void findRelation(@RequestBody long teacherId) {
         SchoolClass schoolClass = schoolClassRepository.findByTeacher_TeacherId(teacherId);
         if (schoolClass != null) {
             schoolClass.setTeacher(null);
             schoolClassRepository.save(schoolClass);
-        } 
-    } 
+        }
+    }
 
     @DeleteMapping(value = "/{classId}")
     void deleteSchoolClass(@PathVariable Long classId) {
-       
-
+        SchoolClass schoolClass = schoolClassRepository.findById(classId).get();
+        schoolClass.setTeacher(null);
+        schoolClass.getStudents().forEach(student -> {
+            student.setSchoolClass(null);
+        });
         schoolClassRepository.deleteById(classId);
     }
 }

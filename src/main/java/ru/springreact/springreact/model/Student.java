@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 @Entity
 @Table(name = "students")
 
@@ -17,7 +18,7 @@ public class Student {
     private String lastname;
     private String gender;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classId")
     @JsonIgnore
     private SchoolClass schoolClass;

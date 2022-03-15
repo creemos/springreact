@@ -57,17 +57,7 @@ const SchoolClasses = () => {
 
   const deleteSchoolClass = async (id) => {
     setIsLoading(true);
-    const emptyArray = [];
-    await axios.put(
-      `http://localhost:9090/api/classes/${id}/deletestudent`,
-      emptyArray,
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "content-type": "application/json",
-        },
-      }
-    );
+    
     await axios.delete(`http://localhost:9090/api/classes/${id}`);
 
     console.log(`Class with no.${id} deleted!`);
@@ -150,14 +140,14 @@ const SchoolClasses = () => {
       {isLoading ? (
         <Loader />
       ) : isShowSchoolClassModal ? (
-        <SchoolClassModal onSubmit={onSubmit} data={currentSchoolClass} />
+        <SchoolClassModal onSubmit={onSubmit} data={currentSchoolClass}/>
       ) : showChangeTeacherModal ? (
         <ChangeTeacherModal
           onSubmit={onChangeTeacher}
           data={currentSchoolClass}
         />
       ) : showChangeStudentsModal ? (
-        <ChangeStudentsModal data={currentSchoolClass} />
+        <ChangeStudentsModal data={currentSchoolClass} setShowChangeStudentsModal={setShowChangeStudentsModal}/>
       ) : (
         <div className="w-full">
           <table className="text-center border-2 mt-5 w-full">

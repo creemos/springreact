@@ -56,7 +56,7 @@ const ChangeStudentsModal = ({ data }) => {
           availableStudents.map((student) => {
             return (
               <div>
-                <div key={Math.random(10)}>
+                <div key={student.studentId}>
                   {student.firstname} {student.patronymic} {student.lastname} {" "}
                   {student.gender}
                 </div>
@@ -78,7 +78,7 @@ const ChangeStudentsModal = ({ data }) => {
           schoolClassStudents.map((student) => {
             return (
               <div className="flex justify-between p-1">
-                <div key={Math.random(10)}>
+                <div key={student.studentId}>
                   {student.firstname} {student.patronymic} {student.lastname} {" "}
                   {student.gender}
                 </div>
@@ -95,6 +95,8 @@ const ChangeStudentsModal = ({ data }) => {
           <div>В классе нет учеников!</div>
         )}
       </div>
+      <button className="self-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Вернуться</button>
+      
     </div>
   );
 };

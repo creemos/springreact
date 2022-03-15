@@ -19,9 +19,8 @@ public class SchoolClass {
     @JoinColumn(name = "teacherId")
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "schoolClass", cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     private List<Student> students = new ArrayList<>();
-
 
     public List<Student> getStudents() {
         return this.students;
