@@ -35,13 +35,14 @@ const SchoolClasses = () => {
     if (
       isShowSchoolClassModal === false ||
       isLoading === false ||
-      showChangeTeacherModal === false
+      showChangeTeacherModal === false ||
+      showChangeStudentsModal === false
     ) {
       fetchAllSchoolClasses();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShowSchoolClassModal, showChangeTeacherModal]);
+  }, [isShowSchoolClassModal, showChangeTeacherModal, isLoading, showChangeStudentsModal]);
 
   const editSchoolClass = (id) => {
     console.log(`Select class no.${id}`);
@@ -98,7 +99,6 @@ const SchoolClasses = () => {
   };
 
   const onChangeTeacher = (data) => {
-    console.log(data.teacher);
     axios
       .put(
         `http://localhost:9090/api/classes/${currentSchoolClass.id}/addteacher`,
@@ -167,17 +167,16 @@ const SchoolClasses = () => {
                     <td>{schoolClass.year}</td>
                     <td>{schoolClass.code}</td>
                     <td className="mt-auto mb-0">
-                      <div className="flex justify-center">
+                      <div className="flex justify-center flex-col p-3">
                         {schoolClass.teacher ? (
                           `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
-                        ) : (
+                        ) : null} 
                           <button
-                            className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
+                            className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mt-3"
                             onClick={() => editTeacher(schoolClass.id)}
                           >
                             Редактировать
                           </button>
-                        )}
                       </div>
                     </td>
                     <td>
@@ -190,7 +189,7 @@ const SchoolClasses = () => {
                           );
                         })}
                         <button
-                          className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
+                          className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mt-3"
                           onClick={() => editStudents(schoolClass)}
                         >
                           Редактировать

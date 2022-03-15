@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const ChangeStudentsModal = ({ data }) => {
+const ChangeStudentsModal = ({ data, setShowChangeStudentsModal }) => {
   const [availableStudents, setAvailableStudents] = useState([]);
   const [schoolClassStudents, setSchoolClassStudents] = useState([]);
 
@@ -95,7 +95,7 @@ const ChangeStudentsModal = ({ data }) => {
           <div>В классе нет учеников!</div>
         )}
       </div>
-      <button className="self-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Вернуться</button>
+      <button className="self-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded" onClick={() => setShowChangeStudentsModal(false)}>Вернуться</button>
       
     </div>
   );

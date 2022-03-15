@@ -29,7 +29,12 @@ const ChangeTeacherModal = ({ onSubmit, data }) => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (availableTeachers != []) {
+      fetchData();
+    }
+
+    return null
+    
   }, [availableTeachers]);
 
   return isLoading ? (
