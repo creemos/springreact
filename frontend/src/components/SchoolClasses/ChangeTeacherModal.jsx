@@ -29,10 +29,9 @@ const ChangeTeacherModal = ({ onSubmit, data }) => {
   };
 
   useEffect(() => {
-    if (availableTeachers != []) {
+    if (availableTeachers !== []) {
       fetchData();
     }
-
     return null
     
   }, [availableTeachers]);

@@ -12,6 +12,7 @@ const SchoolClasses = () => {
   const [editMode, setEditMode] = useState(false);
   const [showChangeTeacherModal, setShowChangeTeacherModal] = useState(false);
   const [showChangeStudentsModal, setShowChangeStudentsModal] = useState(false);
+  const [sort, setSort] = useState("year")
   const [currentSchoolClass, setCurrentSchoolClass] = useState({
     id: "",
     code: "",
@@ -136,7 +137,7 @@ const SchoolClasses = () => {
   }, [currentSchoolClass, isShowSchoolClassModal]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-between">
+    <div className="w-3/4 flex flex-col items-center justify-between">
       {isLoading ? (
         <Loader />
       ) : isShowSchoolClassModal ? (
@@ -149,24 +150,24 @@ const SchoolClasses = () => {
       ) : showChangeStudentsModal ? (
         <ChangeStudentsModal data={currentSchoolClass} setShowChangeStudentsModal={setShowChangeStudentsModal}/>
       ) : (
-        <div className="w-full">
+        <div className="w-full flex flex-col align-center justify-center">
           <table className="text-center border-2 mt-5 w-full">
             <thead className="bg-slate-400">
               <tr>
-                <th>Год обучения</th>
-                <th>Мнемокод</th>
+                <th className="cursor-pointer" onClick={() => setSort("year")}>Год обучения</th>
+                <th className="cursor-pointer" onClick={() => setSort("code")}>Мнемокод</th>
                 <th className=" w-1/4">Классный руководитель</th>
                 <th className=" w-1/4">Список учеников</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {allSchoolClasses.map((schoolClass) => {
+              {allSchoolClasses.sort((a, b) => a[sort] > b[sort]? 1 : -1).map((schoolClass) => {
                 return (
                   <tr key={Math.random(10)}>
-                    <td>{schoolClass.year}</td>
-                    <td>{schoolClass.code}</td>
-                    <td className="mt-auto mb-0">
+                    <td className="border border-slate-300">{schoolClass.year}</td>
+                    <td className="border border-slate-300">{schoolClass.code}</td>
+                    <td className="mt-auto mb-0 border border-slate-300">
                       <div className="flex justify-center flex-col p-3">
                         {schoolClass.teacher ? (
                           `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
@@ -179,11 +180,11 @@ const SchoolClasses = () => {
                           </button>
                       </div>
                     </td>
-                    <td>
+                    <td className="border border-slate-300">
                       <ul>
                         {schoolClass.students.map((student) => {
                           return (
-                            <li key={Math.random(10)} className="ml-5 mr-5">
+                            <li  key={Math.random(10)} className="ml-5 mr-5 border border-slate-300">
                               {`${student.firstname} ${student.patronymic} ${student.lastname}`}
                             </li>
                           );
@@ -196,7 +197,7 @@ const SchoolClasses = () => {
                         </button>
                       </ul>
                     </td>
-                    <td>
+                    <td className="border border-slate-300">
                       <button
                         className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                         onClick={() => {
@@ -221,7 +222,7 @@ const SchoolClasses = () => {
           </table>
           <button
             onClick={() => setIsShowSchoolClassModal(true)}
-            className="self-center mt-5 w-1/2  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="self-end mt-5 w-1/6  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Добавить класс
           </button>

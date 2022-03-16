@@ -5,9 +5,11 @@ import TeacherModal from "./TeacherModal";
 
 const Teachers = () => {
   const [allTeachers, setAllTeachers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showTeacherModal, setShowTeacherModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [filter, setFilter] = useState("");
+  const [sort, setSort] = useState("firstname")
   const [currentTeacher, setCurrentTeacher] = useState({
     id: "",
     firstname: "",
@@ -18,47 +20,47 @@ const Teachers = () => {
     subject: "",
   });
 
-  const fetchTeachers = () => {
-    setIsLoading(true);
-    axios
-      .get("http://localhost:9090/api/teachers")
-      .then((res) => {
-        setAllTeachers(res.data);
-      })
-      .then(setIsLoading(false));
+  const filtrateTeachers = (array) => {
+    if (filter !== "") {
+      const filtratedTeachers = array.filter((teacher) => {
+        return teacher.firstname.includes(filter) || teacher.patronymic.includes(filter) || teacher.lastname.includes(filter);
+      });
+      setAllTeachers(filtratedTeachers);
+    } else {
+      setAllTeachers(array)
+    }
+    setIsLoading(false)
   };
 
-  const deleteTeacher = async(id) => {
-    setIsLoading(true);
+  const fetchTeachers = async () => {
+    await axios.get("http://localhost:9090/api/teachers").then((res) => {
+      filtrateTeachers(res.data);
+    });
+  };
+
+  const deleteTeacher = async (id) => {
     await axios.put(`http://localhost:9090/api/classes/find_relation`, id, {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "content-type": "application/json",
       },
-    })
+    });
     await axios
       .delete(`http://localhost:9090/api/teachers/${id}`)
       .then((res) => {
         fetchTeachers();
         console.log(`User with no.${id} deleted!`);
       })
-      .then(setIsLoading(false))
   };
-
-  useEffect(() => {
-    if (currentTeacher !== 1 && showTeacherModal === true) {
-      setIsLoading(false);
-    }
-  }, [currentTeacher, showTeacherModal]);
 
   const editTeacher = (id) => {
     console.log(`Select teacher no.${id}`);
-    setIsLoading(true);
     setEditMode(true);
     axios
       .get(`http://localhost:9090/api/teachers/${id}`)
       .then((res) => setCurrentTeacher(res.data))
       .then(setShowTeacherModal(true));
+    fetchTeachers()
   };
 
   useEffect(() => {
@@ -66,7 +68,7 @@ const Teachers = () => {
       fetchTeachers();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showTeacherModal]);
+  }, [showTeacherModal, filter]);
 
   const onSubmit = (data) => {
     if (!editMode) {
@@ -95,67 +97,73 @@ const Teachers = () => {
       setEditMode(false);
     }
     setShowTeacherModal(false);
-    fetchTeachers()
+    fetchTeachers();
   };
 
+  const searchHandler = (e) => {
+    e.preventDefault()
+    setFilter(e.target.value)
+  }
+
   return (
-      <div className="w-3/4 flex flex-col items-center justify-between">
-        {isLoading ? (
-          <Loader />
-        ) : showTeacherModal === false ? (
-          <div className="ml-10 w-full flex flex-col justify-between">
-            <table className="text-center border-2 mt-5">
-              <thead className="bg-slate-400">
-                <tr>
-                  <th>Имя</th>
-                  <th>Отчество</th>
-                  <th>Фамилия</th>
-                  <th>Пол</th>
-                  <th>Год рождения</th>
-                  <th>Предмет</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {allTeachers.map((teacher) => {
-                  return (
-                    <tr key={teacher.id}>
-                      <td>{teacher.firstname}</td>
-                      <td>{teacher.patronymic}</td>
-                      <td>{teacher.lastname}</td>
-                      <td>{teacher.gender}</td>
-                      <td>{teacher.year}</td>
-                      <td>{teacher.subject}</td>
-                      <td>
-                        <button
-                          className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                          onClick={() => editTeacher(teacher.id)}
-                        >
-                          Изменить
-                        </button>
-                        <button
-                          className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                          onClick={() => deleteTeacher(teacher.id)}
-                        >
-                          Удалить
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <button
-              onClick={() => setShowTeacherModal(true)}
-              className="self-center mt-5 w-1/2  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Добавить учителя
-            </button>
-          </div>
-        ) : (
-          <TeacherModal onSubmit={onSubmit} data={currentTeacher} />
-        )}
-      </div>
+    <div className="w-3/4 flex flex-col items-center justify-between">
+      {isLoading ? (
+        <Loader />
+      ) : showTeacherModal === false ? (
+        <div className="w-full flex flex-col justify-between">
+            <input className="self-end border-2 border-indigo-600 p-2 mt-2" type="text" placeholder="Поиск.." onChange={e => searchHandler(e)} />
+          <table className="text-center border-2 mt-5">
+            <thead className="bg-slate-400">
+              <tr>
+                <th className="cursor-pointer" onClick={() => setSort("firstname")}>Имя</th>
+                <th className="cursor-pointer" onClick={() => setSort("patronymic")}>Отчество</th>
+                <th className="cursor-pointer" onClick={() => setSort("lastname")}>Фамилия</th>
+                <th className="cursor-pointer" onClick={() => setSort("gender")}>Пол</th>
+                <th className="cursor-pointer" onClick={() => setSort("year")}>Год рождения</th>
+                <th>Предмет</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {allTeachers.sort((a, b) => a[sort] > b[sort]? 1 : -1).map((teacher) => {
+                return (
+                  <tr key={teacher.id}>
+                    <td className="border border-slate-300">{teacher.firstname}</td>
+                    <td className="border border-slate-300">{teacher.patronymic}</td>
+                    <td className="border border-slate-300">{teacher.lastname}</td>
+                    <td className="border border-slate-300">{teacher.gender}</td>
+                    <td className="border border-slate-300">{teacher.year}</td>
+                    <td className="border border-slate-300">{teacher.subject}</td>
+                    <td className="border border-slate-300">
+                      <button
+                        className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => editTeacher(teacher.id)}
+                      >
+                        Изменить
+                      </button>
+                      <button
+                        className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => deleteTeacher(teacher.id)}
+                      >
+                        Удалить
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <button
+            onClick={() => setShowTeacherModal(true)}
+            className="self-center mt-5 w-1/2  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Добавить учителя
+          </button>
+        </div>
+      ) : (
+        <TeacherModal onSubmit={onSubmit} data={currentTeacher} />
+      )}
+    </div>
   );
 };
 

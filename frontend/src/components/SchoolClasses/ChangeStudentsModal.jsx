@@ -55,8 +55,8 @@ const ChangeStudentsModal = ({ data, setShowChangeStudentsModal }) => {
         {availableStudents.length > 0 ? (
           availableStudents.map((student) => {
             return (
-              <div>
-                <div key={student.studentId}>
+              <div key={student.studentId} className="flex justify-between p-1 align-center">
+                <div>
                   {student.firstname} {student.patronymic} {student.lastname} {" "}
                   {student.gender}
                 </div>
@@ -77,8 +77,8 @@ const ChangeStudentsModal = ({ data, setShowChangeStudentsModal }) => {
         {schoolClassStudents.length > 0 ? (
           schoolClassStudents.map((student) => {
             return (
-              <div className="flex justify-between p-1">
-                <div key={student.studentId}>
+              <div key={student.studentId} className="flex justify-between p-1 align-center">
+                <div>
                   {student.firstname} {student.patronymic} {student.lastname} {" "}
                   {student.gender}
                 </div>
