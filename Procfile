@@ -1,1 +1,1 @@
-web: java -jar target/springreact-1.0.jar target\*.war
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar target/springreact-1.0.jar
