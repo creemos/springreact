@@ -31,7 +31,7 @@ const Students = () => {
   const filtrateStudents = (array) => {
     if (filter !== "") {
       const filtratedStudents = array.filter((student) => {
-        return student.firstname.includes(filter) || student.patronymic.includes(filter) || student.lastname.includes(filter);
+        return student.firstname.toLowerCase().includes(filter) || student.patronymic.toLowerCase().includes(filter) || student.lastname.toLowerCase().includes(filter);
       });
       setAllStudents(filtratedStudents);
     } else {

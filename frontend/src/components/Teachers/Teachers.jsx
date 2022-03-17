@@ -9,7 +9,7 @@ const Teachers = () => {
   const [showTeacherModal, setShowTeacherModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [filter, setFilter] = useState("");
-  const [sort, setSort] = useState("firstname")
+  const [sort, setSort] = useState("firstname");
   const [currentTeacher, setCurrentTeacher] = useState({
     id: "",
     firstname: "",
@@ -23,13 +23,17 @@ const Teachers = () => {
   const filtrateTeachers = (array) => {
     if (filter !== "") {
       const filtratedTeachers = array.filter((teacher) => {
-        return teacher.firstname.includes(filter) || teacher.patronymic.includes(filter) || teacher.lastname.includes(filter);
+        return (
+          teacher.firstname.toLowerCase().includes(filter) ||
+          teacher.patronymic.toLowerCase().includes(filter) ||
+          teacher.lastname.toLowerCase().includes(filter)
+        );
       });
       setAllTeachers(filtratedTeachers);
     } else {
-      setAllTeachers(array)
+      setAllTeachers(array);
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   const fetchTeachers = async () => {
@@ -50,7 +54,7 @@ const Teachers = () => {
       .then((res) => {
         fetchTeachers();
         console.log(`User with no.${id} deleted!`);
-      })
+      });
   };
 
   const editTeacher = (id) => {
@@ -60,15 +64,8 @@ const Teachers = () => {
       .get(`http://localhost:9090/api/teachers/${id}`)
       .then((res) => setCurrentTeacher(res.data))
       .then(setShowTeacherModal(true));
-    fetchTeachers()
+    fetchTeachers();
   };
-
-  useEffect(() => {
-    if (showTeacherModal === false) {
-      fetchTeachers();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showTeacherModal, filter]);
 
   const onSubmit = (data) => {
     if (!editMode) {
@@ -97,13 +94,21 @@ const Teachers = () => {
       setEditMode(false);
     }
     setShowTeacherModal(false);
-    fetchTeachers();
   };
 
   const searchHandler = (e) => {
-    e.preventDefault()
-    setFilter(e.target.value)
-  }
+    e.preventDefault();
+    setFilter(e.target.value);
+  };
+
+  useEffect(() => {
+    fetchTeachers();
+  }, []);
+
+  useEffect(() => {
+    fetchTeachers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter, onSubmit]);
 
   return (
     <div className="w-3/4 flex flex-col items-center justify-between">
@@ -111,46 +116,87 @@ const Teachers = () => {
         <Loader />
       ) : showTeacherModal === false ? (
         <div className="w-full flex flex-col justify-between">
-            <input className="self-end border-2 border-indigo-600 p-2 mt-2" type="text" placeholder="Поиск.." onChange={e => searchHandler(e)} />
+          <input
+            className="self-end border-2 border-indigo-600 p-2 mt-2"
+            type="text"
+            placeholder="Поиск.."
+            onChange={(e) => searchHandler(e)}
+          />
           <table className="text-center border-2 mt-5">
             <thead className="bg-slate-400">
               <tr>
-                <th className="cursor-pointer" onClick={() => setSort("firstname")}>Имя</th>
-                <th className="cursor-pointer" onClick={() => setSort("patronymic")}>Отчество</th>
-                <th className="cursor-pointer" onClick={() => setSort("lastname")}>Фамилия</th>
-                <th className="cursor-pointer" onClick={() => setSort("gender")}>Пол</th>
-                <th className="cursor-pointer" onClick={() => setSort("year")}>Год рождения</th>
+                <th
+                  className="cursor-pointer"
+                  onClick={() => setSort("firstname")}
+                >
+                  Имя
+                </th>
+                <th
+                  className="cursor-pointer"
+                  onClick={() => setSort("patronymic")}
+                >
+                  Отчество
+                </th>
+                <th
+                  className="cursor-pointer"
+                  onClick={() => setSort("lastname")}
+                >
+                  Фамилия
+                </th>
+                <th
+                  className="cursor-pointer"
+                  onClick={() => setSort("gender")}
+                >
+                  Пол
+                </th>
+                <th className="cursor-pointer" onClick={() => setSort("year")}>
+                  Год рождения
+                </th>
                 <th>Предмет</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {allTeachers.sort((a, b) => a[sort] > b[sort]? 1 : -1).map((teacher) => {
-                return (
-                  <tr key={teacher.id}>
-                    <td className="border border-slate-300">{teacher.firstname}</td>
-                    <td className="border border-slate-300">{teacher.patronymic}</td>
-                    <td className="border border-slate-300">{teacher.lastname}</td>
-                    <td className="border border-slate-300">{teacher.gender}</td>
-                    <td className="border border-slate-300">{teacher.year}</td>
-                    <td className="border border-slate-300">{teacher.subject}</td>
-                    <td className="border border-slate-300">
-                      <button
-                        className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => editTeacher(teacher.id)}
-                      >
-                        Изменить
-                      </button>
-                      <button
-                        className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => deleteTeacher(teacher.id)}
-                      >
-                        Удалить
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {allTeachers
+                .sort((a, b) => (a[sort] > b[sort] ? 1 : -1))
+                .map((teacher) => {
+                  return (
+                    <tr key={teacher.id}>
+                      <td className="border border-slate-300">
+                        {teacher.firstname}
+                      </td>
+                      <td className="border border-slate-300">
+                        {teacher.patronymic}
+                      </td>
+                      <td className="border border-slate-300">
+                        {teacher.lastname}
+                      </td>
+                      <td className="border border-slate-300">
+                        {teacher.gender}
+                      </td>
+                      <td className="border border-slate-300">
+                        {teacher.year}
+                      </td>
+                      <td className="border border-slate-300">
+                        {teacher.subject}
+                      </td>
+                      <td className="border border-slate-300">
+                        <button
+                          className="self-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                          onClick={() => editTeacher(teacher.id)}
+                        >
+                          Изменить
+                        </button>
+                        <button
+                          className="self-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                          onClick={() => deleteTeacher(teacher.id)}
+                        >
+                          Удалить
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
           <button

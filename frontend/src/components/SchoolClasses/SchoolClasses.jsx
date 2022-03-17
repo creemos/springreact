@@ -33,15 +33,7 @@ const SchoolClasses = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      isShowSchoolClassModal === false ||
-      isLoading === false ||
-      showChangeTeacherModal === false ||
-      showChangeStudentsModal === false
-    ) {
       fetchAllSchoolClasses();
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isShowSchoolClassModal, showChangeTeacherModal, isLoading, showChangeStudentsModal]);
 
@@ -173,18 +165,18 @@ const SchoolClasses = () => {
                           `${schoolClass.teacher.firstname} ${schoolClass.teacher.patronymic} ${schoolClass.teacher.lastname}`
                         ) : null} 
                           <button
-                            className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mt-3"
+                            className="self-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded mt-5"
                             onClick={() => editTeacher(schoolClass.id)}
                           >
                             Редактировать
                           </button>
                       </div>
                     </td>
-                    <td className="border border-slate-300">
+                    <td className="border border-slate-300 pb-3">
                       <ul>
                         {schoolClass.students.map((student) => {
                           return (
-                            <li  key={Math.random(10)} className="ml-5 mr-5 border border-slate-300">
+                            <li  key={Math.random(10)} className="m-2 border border-slate-300">
                               {`${student.firstname} ${student.patronymic} ${student.lastname}`}
                             </li>
                           );
