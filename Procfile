@@ -1,1 +1,1 @@
-web: java -jar target/springreact-1.0.jar
+web: java -jar target/springreact-1.0.jar target\*.war
