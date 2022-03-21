@@ -89,7 +89,13 @@ public class SchoolClassController {
         newSchoolClass.setStudents(students);
         final SchoolClass updatedSchoolClass = schoolClassRepository.save(newSchoolClass);
         return ResponseEntity.ok(updatedSchoolClass);
+    }
 
+    @PutMapping("/{classId}/clearteacher")
+    void clearTeacher(@PathVariable long classId) {
+        SchoolClass schoolClass = schoolClassRepository.findById(classId).get();
+        schoolClass.setTeacher(null);
+        schoolClassRepository.save(schoolClass);
     }
 
     @PutMapping("/find_relation")
