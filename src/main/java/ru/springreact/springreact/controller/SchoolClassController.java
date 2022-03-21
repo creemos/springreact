@@ -92,15 +92,6 @@ public class SchoolClassController {
 
     }
 
-    @PutMapping("/find_relation")
-    void findRelation(@RequestBody long teacherId) {
-        SchoolClass schoolClass = schoolClassRepository.findByTeacher_TeacherId(teacherId);
-        if (schoolClass != null) {
-            schoolClass.setTeacher(null);
-            schoolClassRepository.save(schoolClass);
-        }
-    }
-
     @DeleteMapping(value = "/{classId}")
     void deleteSchoolClass(@PathVariable Long classId) {
         SchoolClass schoolClass = schoolClassRepository.findById(classId).get();
