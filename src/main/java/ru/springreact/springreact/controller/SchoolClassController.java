@@ -91,21 +91,15 @@ public class SchoolClassController {
         return ResponseEntity.ok(updatedSchoolClass);
     }
 
-    @PutMapping("/{classId}/clearteacher")
-    void clearTeacher(@PathVariable long classId) {
+    @PutMapping("/clearteacher")
+    void clearTeacher(@RequestBody long classId) {
         SchoolClass schoolClass = schoolClassRepository.findById(classId).get();
-        schoolClass.setTeacher(null);
-        schoolClassRepository.save(schoolClass);
-    }
-
-    @PutMapping("/find_relation")
-    void findRelation(@RequestBody long teacherId) {
-        SchoolClass schoolClass = schoolClassRepository.findByTeacher_TeacherId(teacherId);
         if (schoolClass != null) {
             schoolClass.setTeacher(null);
             schoolClassRepository.save(schoolClass);
         }
     }
+
 
     @DeleteMapping(value = "/{classId}")
     void deleteSchoolClass(@PathVariable Long classId) {
